@@ -1,0 +1,53 @@
+categories:
+  - id: breakfast
+    name: Завтрак
+    kind: course
+  - id: appetizer
+    name: Закуска
+    kind: course
+  - id: salad
+    name: Салат
+    kind: course
+  - id: soup
+    name: Суп
+    kind: course
+  - id: main
+    name: Основное блюдо
+    kind: course
+  - id: side
+    name: Гарнир
+    kind: course
+  - id: dessert
+    name: Десерт
+    kind: course
+  - id: baking
+    name: Выпечка
+    kind: course
+  - id: snack
+    name: Перекус
+    kind: course
+  - id: sauce
+    name: Соус или заправка
+    kind: course
+  - id: drink
+    name: Напиток
+    kind: course
+  - id: meat
+    name: Мясо
+    kind: main-ingredient
+  - id: poultry
+    name: Птица
+    kind: main-ingredient
+  - id: fish
+    name: Рыба
+    kind: main-ingredient
+  - id: seafood
+    name: Морепродукты
+    kind: main-ingredient
+  - id: vegetarian
+    name: Без мяса и рыбы
+    kind: diet
+  - id: vegan
+    name: Без продуктов животного происхождения
+    kind: diet
+

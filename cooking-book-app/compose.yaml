@@ -1,0 +1,16 @@
+services:
+  cooking-book:
+    build:
+      context: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      RECIPES_DIR: /data/recipes
+      CATALOG_DIR: /data/catalog
+      REFERENCE_DIR: /data/reference
+      SITE_URL: ${SITE_URL:-http://localhost:3000}
+    volumes:
+      - ../recipes:/data/recipes:ro
+      - ../catalog:/data/catalog:ro
+      - ../reference:/data/reference:ro

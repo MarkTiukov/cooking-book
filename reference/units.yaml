@@ -1,0 +1,58 @@
+units:
+  - id: g
+    name: грамм
+    dimension: mass
+    base_unit: g
+    factor_to_base: 1
+  - id: kg
+    name: килограмм
+    dimension: mass
+    base_unit: g
+    factor_to_base: 1000
+  - id: ml
+    name: миллилитр
+    dimension: volume
+    base_unit: ml
+    factor_to_base: 1
+  - id: l
+    name: литр
+    dimension: volume
+    base_unit: ml
+    factor_to_base: 1000
+  - id: tsp
+    name: чайная ложка
+    dimension: volume
+    base_unit: ml
+    factor_to_base: 5
+  - id: tbsp
+    name: столовая ложка
+    dimension: volume
+    base_unit: ml
+    factor_to_base: 15
+  - id: cup
+    name: стакан
+    dimension: cup
+  - id: item
+    name: штука
+    dimension: item
+  - id: clove
+    name: зубчик
+    dimension: clove
+  - id: bunch
+    name: пучок
+    dimension: bunch
+  - id: package
+    name: упаковка
+    dimension: package
+  - id: can
+    name: банка
+    dimension: can
+  - id: slice
+    name: ломтик
+    dimension: slice
+  - id: pinch
+    name: щепотка
+    dimension: pinch
+  - id: to-taste
+    name: по вкусу
+    dimension: non-numeric

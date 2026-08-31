@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# Local source material and scratch files
+/tmp/
+
+# Application dependencies and build output
+/cooking-book-app/node_modules/
+/cooking-book-app/.next/
+/cooking-book-app/out/
+/cooking-book-app/build/
+/cooking-book-app/coverage/
+
+# Local environment and logs
+/cooking-book-app/.env*
+!/cooking-book-app/.env.example
+/cooking-book-app/*.log
+/cooking-book-app/.vercel/
+/cooking-book-app/*.tsbuildinfo
+/cooking-book-app/next-env.d.ts

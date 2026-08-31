@@ -1,0 +1,400 @@
+departments:
+  - id: produce
+    name: Овощи, фрукты и зелень
+  - id: meat-fish
+    name: Мясо и рыба
+  - id: dairy-eggs
+    name: Молочные продукты и яйца
+  - id: grocery
+    name: Бакалея
+  - id: spices-sauces
+    name: Специи и соусы
+  - id: bakery
+    name: Хлеб и выпечка
+  - id: frozen
+    name: Замороженные продукты
+  - id: drinks
+    name: Напитки
+  - id: other
+    name: Прочее
+
+ingredients:
+  - id: rice-long-grain
+    name: Рис длиннозёрный
+    aliases:
+      - длиннозернистый рис
+      - длиннозёрный рис
+    department: grocery
+  - id: chicken-fillet
+    name: Куриное филе
+    aliases:
+      - филе курицы
+    department: meat-fish
+  - id: chicken-egg
+    name: Яйцо куриное
+    aliases:
+      - яйца
+      - яйцо
+    department: dairy-eggs
+  - id: carrot
+    name: Морковь
+    aliases: []
+    department: produce
+  - id: onion
+    name: Лук репчатый
+    aliases:
+      - репчатый лук
+      - луковица
+    department: produce
+  - id: ginger
+    name: Имбирь
+    aliases:
+      - корень имбиря
+    department: produce
+  - id: chili-pepper
+    name: Перец чили
+    aliases:
+      - чили
+    department: produce
+  - id: garlic
+    name: Чеснок
+    aliases: []
+    department: produce
+  - id: sunflower-oil
+    name: Масло подсолнечное
+    aliases:
+      - подсолнечное масло
+      - рафинированное подсолнечное масло
+    department: grocery
+  - id: butter
+    name: Масло сливочное
+    aliases:
+      - сливочное масло
+    department: dairy-eggs
+  - id: soy-sauce
+    name: Соус соевый
+    aliases:
+      - соевый соус
+    department: spices-sauces
+  - id: green-onion
+    name: Лук зелёный
+    aliases:
+      - зеленый лук
+      - зелёный лук
+    department: produce
+  - id: lemon
+    name: Лимон
+    aliases: []
+    department: produce
+  - id: sesame-seeds
+    name: Кунжут
+    aliases:
+      - семена кунжута
+    department: spices-sauces
+  - id: zucchini
+    name: Кабачок
+    aliases:
+      - кабачки
+    department: produce
+  - id: feta
+    name: Сыр фета
+    aliases:
+      - фета
+    department: dairy-eggs
+  - id: gouda
+    name: Сыр гауда
+    aliases:
+      - гауда
+    department: dairy-eggs
+  - id: mixed-greens
+    name: Зелень ассорти
+    aliases:
+      - смесь зелени
+      - зелень
+    department: produce
+  - id: pork-beef-mince
+    name: Фарш свино-говяжий
+    aliases:
+      - свино-говяжий фарш
+    department: meat-fish
+  - id: russian-cheese
+    name: Сыр «Российский»
+    aliases:
+      - российский сыр
+    department: dairy-eggs
+  - id: tomato-sauce
+    name: Соус томатный
+    aliases:
+      - томатный соус
+    department: spices-sauces
+  - id: dill
+    name: Укроп
+    aliases: []
+    department: produce
+  - id: parsley
+    name: Петрушка
+    aliases: []
+    department: produce
+  - id: salt
+    name: Соль
+    aliases: []
+    department: spices-sauces
+  - id: black-pepper
+    name: Перец чёрный молотый
+    aliases:
+      - черный молотый перец
+      - чёрный перец
+    department: spices-sauces
+  - id: beef
+    name: Говядина
+    aliases:
+      - мясо говядины
+    department: meat-fish
+  - id: white-cabbage
+    name: Капуста белокочанная
+    aliases:
+      - белокочанная капуста
+      - капуста
+    department: produce
+  - id: tomato-paste
+    name: Томатная паста
+    aliases: []
+    department: spices-sauces
+  - id: ground-coriander
+    name: Кориандр молотый
+    aliases:
+      - молотый кориандр
+      - кориандр
+    department: spices-sauces
+  - id: sugar
+    name: Сахар
+    aliases:
+      - сахар-песок
+    department: grocery
+  - id: cottage-cheese
+    name: Творог
+    aliases:
+      - творог 5%
+    department: dairy-eggs
+  - id: wheat-flour
+    name: Мука пшеничная
+    aliases:
+      - пшеничная мука
+    department: grocery
+  - id: vanilla-sugar
+    name: Сахар ванильный
+    aliases:
+      - ванильный сахар
+    department: grocery
+  - id: potato
+    name: Картофель
+    aliases:
+      - молодая картошка
+      - молодой картофель
+      - картошка
+    department: produce
+  - id: water
+    name: Вода
+    aliases:
+      - питьевая вода
+      - горячая вода
+    department: other
+    purchasable: false
+  - id: rice
+    name: Рис
+    aliases: []
+    department: grocery
+  - id: minced-meat
+    name: Мясной фарш
+    aliases:
+      - фарш
+    department: meat-fish
+  - id: sour-cream
+    name: Сметана
+    aliases: []
+    department: dairy-eggs
+  - id: mixed-spices
+    name: Специи
+    aliases:
+      - любимые специи
+      - смесь специй
+    department: spices-sauces
+  - id: chicken-thigh
+    name: Куриное бедро
+    aliases:
+      - куриные бедра
+      - куриные бёдра
+    department: meat-fish
+  - id: cream-20
+    name: Сливки 20%
+    aliases:
+      - сливки жирностью 20%
+    department: dairy-eggs
+  - id: sweet-paprika
+    name: Паприка сладкая молотая
+    aliases:
+      - молотая сладкая паприка
+      - сладкая паприка
+    department: spices-sauces
+  - id: apple
+    name: Яблоко
+    aliases:
+      - яблоки
+    department: produce
+  - id: brown-sugar
+    name: Сахар коричневый
+    aliases:
+      - коричневый сахар
+    department: grocery
+  - id: walnut
+    name: Орех грецкий
+    aliases:
+      - грецкие орехи
+      - грецкий орех
+    department: grocery
+  - id: cinnamon
+    name: Корица
+    aliases: []
+    department: spices-sauces
+  - id: dry-yeast
+    name: Дрожжи сухие быстродействующие
+    aliases:
+      - быстродействующие сухие дрожжи
+      - сухие дрожжи
+    department: grocery
+  - id: cream-10
+    name: Сливки 10%
+    aliases:
+      - сливки жирностью 10%
+    department: dairy-eggs
+  - id: cream-cheese
+    name: Сыр творожный
+    aliases:
+      - творожный сыр
+      - сливочный сыр
+    department: dairy-eggs
+  - id: powdered-sugar
+    name: Сахарная пудра
+    aliases: []
+    department: grocery
+  - id: milk
+    name: Молоко
+    aliases: []
+    department: dairy-eggs
+  - id: beef-broth
+    name: Бульон говяжий
+    aliases:
+      - говяжий бульон
+      - мясной бульон
+    department: grocery
+  - id: bay-leaf
+    name: Лавровый лист
+    aliases: []
+    department: spices-sauces
+  - id: black-peppercorn
+    name: Перец чёрный горошком
+    aliases:
+      - черный перец горошком
+      - перец горошком
+    department: spices-sauces
+  - id: beet
+    name: Свёкла
+    aliases:
+      - свекла
+    department: produce
+  - id: red-wine-vinegar
+    name: Уксус красный винный
+    aliases:
+      - красный винный уксус
+    department: spices-sauces
+  - id: baking-soda
+    name: Сода пищевая
+    aliases:
+      - сода
+    department: grocery
+  - id: turkey-mince
+    name: Фарш из индейки
+    aliases:
+      - фарш индейки
+      - индюшиный фарш
+    department: meat-fish
+  - id: cannelloni
+    name: Каннеллони
+    aliases:
+      - каннелони
+    department: grocery
+  - id: mozzarella
+    name: Сыр моцарелла
+    aliases:
+      - моцарелла
+    department: dairy-eggs
+  - id: nutmeg
+    name: Орех мускатный
+    aliases:
+      - мускатный орех
+    department: spices-sauces
+  - id: iceberg-lettuce
+    name: Салат айсберг
+    aliases:
+      - айсберг
+    department: produce
+  - id: tomato
+    name: Помидор
+    aliases:
+      - помидоры
+      - томат свежий
+    department: produce
+  - id: pickled-cucumber
+    name: Огурец маринованный
+    aliases:
+      - маринованные огурцы
+      - маринованный огурец
+    department: produce
+  - id: cheddar
+    name: Сыр чеддер
+    aliases:
+      - чеддер
+    department: dairy-eggs
+  - id: greek-yogurt
+    name: Йогурт греческий
+    aliases:
+      - греческий йогурт
+    department: dairy-eggs
+  - id: ketchup
+    name: Кетчуп
+    aliases: []
+    department: spices-sauces
+  - id: french-mustard
+    name: Горчица французская
+    aliases:
+      - французская горчица
+      - зернистая горчица
+    department: spices-sauces
+  - id: chicken-or-turkey-fillet
+    name: Филе курицы или индейки
+    aliases:
+      - курица или индейка
+      - филе индейки или курицы
+    department: meat-fish
+  - id: red-bell-pepper
+    name: Перец сладкий красный
+    aliases:
+      - красный перец
+      - красный сладкий перец
+      - красный болгарский перец
+    department: produce
+  - id: buckwheat-groats
+    name: Крупа гречневая
+    aliases:
+      - гречка
+      - гречневая крупа
+    department: grocery
+  - id: turkey-meat
+    name: Мясо индейки
+    aliases:
+      - индейка
+    department: meat-fish
+  - id: pumpkin
+    name: Тыква
+    aliases: []
+    department: produce

@@ -1,0 +1,186 @@
+dishes:
+  - id: meatball-soup
+    title: Суп с фрикадельками
+    status: idea
+    categories: [soup, meat]
+  - id: shchi
+    title: Щи
+    status: idea
+    categories: [soup]
+  - id: pea-soup
+    title: Гороховый суп
+    status: idea
+    categories: [soup]
+  - id: chicken-soup
+    title: Куриный суп
+    status: idea
+    categories: [soup, poultry]
+  - id: lamb-soup
+    title: Суп с бараниной
+    status: idea
+    categories: [soup, meat]
+    note: В исходной заметке записано «баранина (что это за суп?))»; конкретный вид супа не указан.
+
+  - id: simple-salad
+    title: Обычный салат
+    status: idea
+    categories: [salad]
+  - id: simple-salad-with-mozzarella
+    title: Обычный салат с моцареллой
+    status: idea
+    categories: [salad, vegetarian]
+  - id: cabbage-salad-with-mayo-and-sour-cream
+    title: Салат из капусты с майонезом и сметаной
+    status: idea
+    categories: [salad, vegetarian]
+
+  - id: greek-yogurt-breakfast
+    title: Греческий йогурт
+    status: idea
+    categories: [breakfast, vegetarian]
+  - id: cottage-cheese-breakfast
+    title: Творог
+    status: idea
+    categories: [breakfast, vegetarian]
+  - id: boiled-eggs
+    title: Варёные яйца
+    status: idea
+    categories: [breakfast, vegetarian]
+  - id: scrambled-eggs
+    title: Скрэмбл
+    status: idea
+    categories: [breakfast, vegetarian]
+  - id: fried-eggs
+    title: Яичница
+    status: idea
+    categories: [breakfast, vegetarian]
+  - id: oatmeal-porridge
+    title: Овсяная каша
+    status: idea
+    categories: [breakfast]
+  - id: buckwheat-porridge
+    title: Гречневая каша
+    status: idea
+    categories: [breakfast]
+  - id: millet-porridge
+    title: Пшённая каша
+    status: idea
+    categories: [breakfast]
+  - id: semolina-porridge
+    title: Манная каша
+    status: idea
+    categories: [breakfast]
+  - id: avocado-toast
+    title: Тост с авокадо
+    status: idea
+    categories: [breakfast, vegetarian]
+  - id: syrniki
+    title: Сырники
+    status: idea
+    categories: [breakfast, vegetarian]
+    note: Полный рецепт при импорте пропущен по решению пользователя.
+
+  - id: chicken-chop
+    title: Куриная отбивная
+    status: idea
+    categories: [main, poultry]
+  - id: whole-roast-chicken-or-turkey
+    title: Курица или индейка целиком в духовке
+    status: idea
+    categories: [main, poultry]
+    variants: [Курица, Индейка]
+  - id: oven-baked-chicken-legs
+    title: Куриные ножки в духовке
+    status: idea
+    categories: [main, poultry]
+  - id: chicken-funchose
+    title: Фунчоза с курицей
+    status: idea
+    categories: [main, poultry]
+
+  - id: pasta-bolognese
+    title: Паста болоньезе
+    status: idea
+    categories: [main, meat]
+  - id: navy-style-pasta
+    title: Макароны по-флотски
+    status: idea
+    categories: [main, meat]
+
+  - id: shrimp-funchose
+    title: Фунчоза с креветками
+    status: idea
+    categories: [main, seafood]
+  - id: shrimp-rice-unagi
+    title: Креветки с рисом и соусом унаги
+    status: idea
+    categories: [main, seafood]
+
+  - id: steamed-pollock
+    title: Минтай на пару
+    status: idea
+    categories: [main, fish]
+  - id: baked-dorado-or-sea-bass
+    title: Дорадо или сибас в духовке
+    status: idea
+    categories: [main, fish]
+    variants: [Дорадо, Сибас]
+  - id: baked-trout
+    title: Форель в духовке
+    status: idea
+    categories: [main, fish]
+
+  - id: beef-cutlets
+    title: Говяжьи котлеты
+    status: idea
+    categories: [main, meat]
+  - id: beef-steak
+    title: Стейк из говядины
+    status: idea
+    categories: [main, meat]
+  - id: potato-meat-casserole
+    title: Картофельно-мясная запеканка
+    status: idea
+    categories: [main, meat]
+
+  - id: moussaka
+    title: Мусака
+    status: idea
+    categories: [main, meat]
+  - id: stuffed-peppers
+    title: Фаршированные перцы
+    status: idea
+    categories: [main, meat]
+
+  - id: potatoes-with-herring
+    title: Картошка с селёдкой
+    status: idea
+    categories: [main, fish]
+  - id: potatoes-with-bacon
+    title: Картошка с беконом
+    status: idea
+    categories: [main, meat]
+  - id: solyanka
+    title: Солянка
+    status: idea
+    categories: [soup, meat]
+  - id: mac-and-cheese
+    title: Мак энд чиз
+    status: idea
+    categories: [main, vegetarian]
+
+  - id: unspecified-squid-dish
+    title: Кальмары
+    status: idea
+    categories: [seafood]
+    note: В исходной заметке вид блюда не указан.
+  - id: quiche
+    title: Киш
+    status: idea
+    categories: [main, baking]
+  - id: apple-crunch
+    title: Кранч с яблоком
+    status: idea
+    categories: [dessert]
+    possible_duplicate_of: apple-crumble
+    note: Возможно, это другое название яблочного крамбла; сохранено отдельно как в исходной библиотеке.
