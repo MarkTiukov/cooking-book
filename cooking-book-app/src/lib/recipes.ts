@@ -22,6 +22,17 @@ export type Recipe = CatalogItemBase & {
   tags: string[];
   allergens: string[];
   ingredientCount: number;
+  ingredients: RecipeIngredient[];
+  steps: string[];
+  notes?: string;
+  source?: string;
+};
+
+export type RecipeIngredient = {
+  id: string;
+  name: string;
+  amount: number | null;
+  unit: string;
 };
 
 export type DishIdea = CatalogItemBase & {
@@ -43,6 +54,11 @@ export type RecipeTag = {
   id: string;
   name: string;
   description?: string;
+};
+
+export type RecipeUnit = {
+  id: string;
+  name: string;
 };
 
 const recipesDirectory = () =>
@@ -76,10 +92,66 @@ function asStringArray(value: unknown): string[] {
     : [];
 }
 
+function parseIngredients(value: unknown, filename: string): RecipeIngredient[] {
+  if (!Array.isArray(value)) {
+    throw new Error(`В ${filename} отсутствует список ингредиентов.`);
+  }
+
+  return value.map((ingredient, index) => {
+    if (!ingredient || typeof ingredient !== "object" || Array.isArray(ingredient)) {
+      throw new Error(`В ${filename} некорректный ингредиент ${index + 1}.`);
+    }
+
+    const item = ingredient as Record<string, unknown>;
+    if (
+      typeof item.id !== "string" ||
+      typeof item.name !== "string" ||
+      (typeof item.amount !== "number" && item.amount !== null) ||
+      typeof item.unit !== "string"
+    ) {
+      throw new Error(`В ${filename} некорректный ингредиент ${index + 1}.`);
+    }
+
+    return {
+      id: item.id,
+      name: item.name,
+      amount: item.amount,
+      unit: item.unit,
+    };
+  });
+}
+
+function getSection(source: string, heading: string): string | undefined {
+  const marker = `## ${heading}`;
+  const headingStart = source.indexOf(marker);
+  if (headingStart === -1) return undefined;
+
+  const contentStart = source.indexOf("\n", headingStart + marker.length);
+  if (contentStart === -1) return undefined;
+
+  const nextHeading = source.indexOf("\n## ", contentStart + 1);
+  return source
+    .slice(contentStart + 1, nextHeading === -1 ? undefined : nextHeading)
+    .trim();
+}
+
+function parseSteps(source: string): string[] {
+  const section = getSection(source, "Приготовление");
+  if (!section) return [];
+
+  return section
+    .split(/\r?\n/)
+    .flatMap((line) => {
+      const match = line.match(/^\d+\.\s+(.+)$/);
+      return match ? [match[1].trim()] : [];
+    });
+}
+
 function parseRecipe(source: string, filename: string): Recipe {
   const data = readFrontmatter(source, filename);
   const time = data.time as Record<string, unknown> | undefined;
-  const ingredients = Array.isArray(data.ingredients) ? data.ingredients : [];
+  const ingredients = parseIngredients(data.ingredients, filename);
+  const steps = parseSteps(source);
 
   if (
     typeof data.id !== "string" ||
@@ -87,7 +159,8 @@ function parseRecipe(source: string, filename: string): Recipe {
     typeof data.servings !== "number" ||
     typeof data.difficulty !== "number" ||
     !time ||
-    typeof time.total_minutes !== "number"
+    typeof time.total_minutes !== "number" ||
+    steps.length === 0
   ) {
     throw new Error(`В ${filename} отсутствуют обязательные поля рецепта.`);
   }
@@ -109,6 +182,12 @@ function parseRecipe(source: string, filename: string): Recipe {
     tags: asStringArray(data.tags),
     allergens: asStringArray(data.allergens),
     ingredientCount: ingredients.length,
+    ingredients,
+    steps,
+    ...(getSection(source, "Примечания")
+      ? { notes: getSection(source, "Примечания") }
+      : {}),
+    ...(typeof data.source === "string" ? { source: data.source } : {}),
   };
 }
 
@@ -240,6 +319,29 @@ export async function getTags(): Promise<RecipeTag[]> {
               : {}),
           },
         ]
+      : [];
+  });
+}
+
+export async function getUnits(): Promise<RecipeUnit[]> {
+  const source = await fs.readFile(
+    path.join(referenceDirectory(), "units.yaml"),
+    "utf8",
+  );
+  const document = parse(source) as { units?: unknown[] };
+
+  if (!Array.isArray(document.units)) {
+    return [];
+  }
+
+  return document.units.flatMap((value) => {
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      return [];
+    }
+
+    const item = value as Record<string, unknown>;
+    return typeof item.id === "string" && typeof item.name === "string"
+      ? [{ id: item.id, name: item.name }]
       : [];
   });
 }

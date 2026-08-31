@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  AlertTriangle,
+  BookOpen,
   ChefHat,
   CircleDashed,
   Clock3,
@@ -14,9 +16,15 @@ import {
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 
-import type { CatalogItem, RecipeCategory, RecipeTag } from "@/lib/recipes";
+import type {
+  CatalogItem,
+  Recipe,
+  RecipeCategory,
+  RecipeTag,
+  RecipeUnit,
+} from "@/lib/recipes";
 
 const difficultyLabels = [
   "",
@@ -46,14 +54,292 @@ type RecipeCatalogProps = {
   items: CatalogItem[];
   categories: RecipeCategory[];
   tags: RecipeTag[];
+  units: RecipeUnit[];
 };
 
-export function RecipeCatalog({ items, categories, tags }: RecipeCatalogProps) {
+const allergenLabels: Record<string, string> = {
+  egg: "Яйца",
+  gluten: "Глютен",
+  milk: "Молочные продукты",
+  mustard: "Горчица",
+  nuts: "Орехи",
+  sesame: "Кунжут",
+  soy: "Соя",
+};
+
+const compactUnitLabels: Record<string, string> = {
+  g: "г",
+  kg: "кг",
+  ml: "мл",
+  l: "л",
+  tsp: "ч. л.",
+  tbsp: "ст. л.",
+  item: "шт.",
+};
+
+const numberFormatter = new Intl.NumberFormat("ru-RU", {
+  maximumFractionDigits: 2,
+});
+
+type RecipeDialogProps = {
+  recipe: Recipe;
+  categoryNames: Map<string, string>;
+  tagNames: Map<string, string>;
+  unitNames: Map<string, string>;
+  onClose: () => void;
+};
+
+function RecipeDialog({
+  recipe,
+  categoryNames,
+  tagNames,
+  unitNames,
+  onClose,
+}: RecipeDialogProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const previousActiveElement = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== "Tab" || !dialogRef.current) return;
+
+      const focusable = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousActiveElement?.focus();
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 overflow-y-auto bg-[rgba(43,33,27,0.62)] p-0 backdrop-blur-[3px] sm:p-6"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={`recipe-title-${recipe.id}`}
+        className="relative mx-auto min-h-dvh w-full bg-[var(--surface)] shadow-[0_30px_100px_rgba(43,33,27,0.3)] sm:min-h-0 sm:max-w-5xl sm:overflow-hidden sm:rounded-[30px]"
+      >
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--line)] bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] px-5 py-4 backdrop-blur-xl sm:px-8">
+          <span className="inline-flex items-center gap-2 text-sm font-bold text-[var(--recipe)]">
+            <BookOpen size={17} aria-hidden="true" />
+            Полный рецепт
+          </span>
+          <button
+            ref={closeButtonRef}
+            type="button"
+            onClick={onClose}
+            className="grid size-10 cursor-pointer place-items-center rounded-full border border-[var(--line)] bg-white text-[var(--muted)] transition hover:border-[var(--accent)] hover:text-[var(--accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+            aria-label="Закрыть рецепт"
+          >
+            <X size={19} aria-hidden="true" />
+          </button>
+        </div>
+
+        <div className="px-5 pb-12 pt-7 sm:px-8 sm:pb-14 sm:pt-9 lg:px-12">
+          <div className="mb-7 max-w-3xl">
+            <div className="mb-4 flex flex-wrap gap-2">
+              {recipe.categories.map((categoryId) => (
+                <span
+                  key={categoryId}
+                  className="rounded-full bg-[var(--soft)] px-3 py-1 text-xs font-bold text-[var(--accent-dark)]"
+                >
+                  {categoryNames.get(categoryId) ?? categoryId}
+                </span>
+              ))}
+              {recipe.tags.map((tagId) => (
+                <span
+                  key={tagId}
+                  className="rounded-full bg-[var(--tag-soft)] px-3 py-1 text-xs font-bold text-[var(--tag)]"
+                >
+                  {tagNames.get(tagId) ?? tagId}
+                </span>
+              ))}
+            </div>
+            <h2
+              id={`recipe-title-${recipe.id}`}
+              className="font-display text-4xl font-bold leading-[1.05] tracking-[-0.04em] text-[var(--ink)] sm:text-5xl"
+            >
+              {recipe.title}
+            </h2>
+          </div>
+
+          <dl className="mb-9 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="rounded-2xl bg-[var(--card-accent)] p-4">
+              <dt className="mb-1 text-xs font-bold uppercase tracking-[0.1em] text-[var(--muted-light)]">
+                Подготовка
+              </dt>
+              <dd className="font-display text-xl font-bold text-[var(--ink)]">
+                {recipe.time.prep_minutes} мин
+              </dd>
+            </div>
+            <div className="rounded-2xl bg-[var(--card-accent)] p-4">
+              <dt className="mb-1 text-xs font-bold uppercase tracking-[0.1em] text-[var(--muted-light)]">
+                Готовка
+              </dt>
+              <dd className="font-display text-xl font-bold text-[var(--ink)]">
+                {recipe.time.cook_minutes} мин
+              </dd>
+            </div>
+            <div className="rounded-2xl bg-[var(--card-accent)] p-4">
+              <dt className="mb-1 text-xs font-bold uppercase tracking-[0.1em] text-[var(--muted-light)]">
+                Всего
+              </dt>
+              <dd className="font-display text-xl font-bold text-[var(--ink)]">
+                {recipe.time.total_minutes} мин
+              </dd>
+            </div>
+            <div className="rounded-2xl bg-[var(--card-accent)] p-4">
+              <dt className="mb-1 text-xs font-bold uppercase tracking-[0.1em] text-[var(--muted-light)]">
+                Порции
+              </dt>
+              <dd className="font-display text-xl font-bold text-[var(--ink)]">
+                {recipe.servings}
+              </dd>
+            </div>
+          </dl>
+
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-14">
+            <section aria-labelledby={`ingredients-title-${recipe.id}`}>
+              <h3
+                id={`ingredients-title-${recipe.id}`}
+                className="font-display mb-5 text-3xl font-bold text-[var(--ink)]"
+              >
+                Ингредиенты
+              </h3>
+              <ul className="overflow-hidden rounded-[20px] border border-[var(--line)] bg-white">
+                {recipe.ingredients.map((ingredient) => (
+                  <li
+                    key={`${ingredient.id}:${ingredient.name}`}
+                    className="flex items-baseline justify-between gap-4 border-b border-[var(--line)] px-4 py-3.5 last:border-b-0 sm:px-5"
+                  >
+                    <span className="font-medium text-[var(--ink)]">
+                      {ingredient.name}
+                    </span>
+                    <span className="shrink-0 text-sm font-bold text-[var(--accent-dark)]">
+                      {ingredient.amount === null
+                        ? unitNames.get(ingredient.unit) ?? ingredient.unit
+                        : `${numberFormatter.format(ingredient.amount)} ${
+                            compactUnitLabels[ingredient.unit] ??
+                            unitNames.get(ingredient.unit) ??
+                            ingredient.unit
+                          }`}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              {recipe.allergens.length > 0 && (
+                <div className="mt-5 rounded-[18px] bg-[var(--idea-soft)] p-4 text-sm text-[var(--ink)]">
+                  <p className="mb-2 flex items-center gap-2 font-bold text-[var(--idea)]">
+                    <AlertTriangle size={16} aria-hidden="true" />
+                    Аллергены
+                  </p>
+                  <p className="leading-6">
+                    {recipe.allergens
+                      .map((allergen) => allergenLabels[allergen] ?? allergen)
+                      .join(", ")}
+                  </p>
+                </div>
+              )}
+            </section>
+
+            <section aria-labelledby={`steps-title-${recipe.id}`}>
+              <h3
+                id={`steps-title-${recipe.id}`}
+                className="font-display mb-5 text-3xl font-bold text-[var(--ink)]"
+              >
+                Приготовление
+              </h3>
+              <ol className="space-y-5">
+                {recipe.steps.map((step, index) => (
+                  <li key={step} className="flex gap-4">
+                    <span className="font-display grid size-9 shrink-0 place-items-center rounded-full bg-[var(--recipe-soft)] text-lg font-bold text-[var(--recipe)]">
+                      {index + 1}
+                    </span>
+                    <p className="pt-1 text-[15px] leading-7 text-[var(--ink)] sm:text-base">
+                      {step}
+                    </p>
+                  </li>
+                ))}
+              </ol>
+
+              {recipe.notes && (
+                <div className="mt-8 rounded-[20px] border border-[var(--line)] bg-[var(--card-accent)] p-5">
+                  <h3 className="font-display mb-2 text-xl font-bold text-[var(--ink)]">
+                    Примечания
+                  </h3>
+                  <p className="whitespace-pre-line text-sm leading-6 text-[var(--muted)]">
+                    {recipe.notes}
+                  </p>
+                </div>
+              )}
+
+              {recipe.source?.startsWith("http") && (
+                <a
+                  href={recipe.source}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-6 inline-flex items-center gap-2 rounded-full px-1 py-2 text-sm font-bold text-[var(--accent-dark)] underline decoration-[var(--line-strong)] underline-offset-4 transition hover:text-[var(--accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                >
+                  Источник рецепта
+                  <span aria-hidden="true">↗</span>
+                </a>
+              )}
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function RecipeCatalog({
+  items,
+  categories,
+  tags,
+  units,
+}: RecipeCatalogProps) {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [tag, setTag] = useState("all");
   const [kind, setKind] = useState<ItemKind>("all");
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [isRefreshing, startRefresh] = useTransition();
 
   const categoryNames = useMemo(
@@ -64,6 +350,11 @@ export function RecipeCatalog({ items, categories, tags }: RecipeCatalogProps) {
   const tagNames = useMemo(
     () => new Map(tags.map((item) => [item.id, item.name])),
     [tags],
+  );
+
+  const unitNames = useMemo(
+    () => new Map(units.map((item) => [item.id, item.name])),
+    [units],
   );
 
   const counts = useMemo(
@@ -305,7 +596,30 @@ export function RecipeCatalog({ items, categories, tags }: RecipeCatalogProps) {
             {filteredItems.map((item, index) => (
               <article
                 key={`${item.kind}:${item.id}`}
-                className="group flex min-h-[282px] flex-col overflow-hidden rounded-[24px] border border-[var(--line)] bg-[var(--surface)] p-5 shadow-[0_12px_38px_rgba(77,45,29,0.06)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_18px_46px_rgba(77,45,29,0.11)] sm:p-6"
+                role={item.kind === "recipe" ? "button" : undefined}
+                tabIndex={item.kind === "recipe" ? 0 : undefined}
+                aria-label={
+                  item.kind === "recipe"
+                    ? `Открыть рецепт «${item.title}»`
+                    : undefined
+                }
+                onClick={() => {
+                  if (item.kind === "recipe") setSelectedRecipe(item);
+                }}
+                onKeyDown={(event) => {
+                  if (
+                    item.kind === "recipe" &&
+                    (event.key === "Enter" || event.key === " ")
+                  ) {
+                    event.preventDefault();
+                    setSelectedRecipe(item);
+                  }
+                }}
+                className={`group flex min-h-[282px] flex-col overflow-hidden rounded-[24px] border border-[var(--line)] bg-[var(--surface)] p-5 shadow-[0_12px_38px_rgba(77,45,29,0.06)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_18px_46px_rgba(77,45,29,0.11)] sm:p-6 ${
+                  item.kind === "recipe"
+                    ? "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+                    : ""
+                }`}
               >
                 <div className="mb-6 flex items-start justify-between gap-4">
                   <span
@@ -367,7 +681,8 @@ export function RecipeCatalog({ items, categories, tags }: RecipeCatalogProps) {
                 </h2>
 
                 {item.kind === "recipe" ? (
-                  <dl className="mt-auto grid grid-cols-3 gap-3 border-t border-[var(--line)] pt-4 text-[var(--muted)]">
+                  <div className="mt-auto border-t border-[var(--line)] pt-4">
+                    <dl className="grid grid-cols-3 gap-3 text-[var(--muted)]">
                     <div>
                       <dt className="sr-only">Время</dt>
                       <dd className="flex items-center gap-1.5 text-sm font-semibold">
@@ -388,7 +703,12 @@ export function RecipeCatalog({ items, categories, tags }: RecipeCatalogProps) {
                         {difficultyLabels[item.difficulty] ?? item.difficulty}
                       </dd>
                     </div>
-                  </dl>
+                    </dl>
+                    <p className="mt-4 flex items-center gap-2 text-sm font-bold text-[var(--recipe)]">
+                      <BookOpen size={15} aria-hidden="true" />
+                      Открыть рецепт
+                    </p>
+                  </div>
                 ) : (
                   <div className="mt-auto border-t border-[var(--line)] pt-4">
                     <p className="flex items-center gap-2 text-sm font-semibold text-[var(--idea)]">
@@ -433,6 +753,16 @@ export function RecipeCatalog({ items, categories, tags }: RecipeCatalogProps) {
           </div>
         )}
       </section>
+
+      {selectedRecipe && (
+        <RecipeDialog
+          recipe={selectedRecipe}
+          categoryNames={categoryNames}
+          tagNames={tagNames}
+          unitNames={unitNames}
+          onClose={() => setSelectedRecipe(null)}
+        />
+      )}
     </main>
   );
 }
