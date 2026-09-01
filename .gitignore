@@ -4,6 +4,7 @@
 # Local source material and scratch files
 /tmp/
 /.agents/
+/plans/
 
 # Application dependencies and build output
 /cooking-book-app/node_modules/
